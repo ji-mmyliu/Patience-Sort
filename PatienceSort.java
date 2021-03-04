@@ -8,19 +8,20 @@
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
-public class Main {
+public class PatienceSort<E> {
     /**
      * This 2D arraylist contains arraylists of arraylists which store the patience
      * sort buckets
      */
-    private static ArrayList<ArrayList<Integer>> buckets;
+    private ArrayList<ArrayList<E>> buckets;
 
     /** This 2D arraylist contains a merged arraylist */
-    private static ArrayList<ArrayList<Integer>> buckets1;
+    private ArrayList<ArrayList<E>> buckets1;
 
     /** This arraylist contains the top element of each bucket */
-    private static ArrayList<Integer> top;
+    private ArrayList<E> top;
 
     /**
      * This method gets the current merged arraylist
@@ -28,11 +29,27 @@ public class Main {
      * @param status The merging state of the program
      * @return The current merged arraylist
      */
-    private static ArrayList<ArrayList<Integer>> getCurrentList(boolean status) {
+    private ArrayList<ArrayList<E>> getCurrentList(boolean status) {
         if (!status)
             return buckets;
         else
             return buckets1;
+    }
+
+    private boolean lessThan(E a, E b) throws Exception {
+        if (!(a instanceof Comparable<?>)) {
+            throw new Exception("Type specified does not implement the Comparable<E> interface");
+        }
+        Comparable<E> c = (Comparable<E>) a;
+        return c.compareTo(b) < 0;
+    }
+
+    private ArrayList<E> reverse(ArrayList<E> prev) {
+        ArrayList<E> toReturn = new ArrayList<E>();
+        for (int i = prev.size() - 1; i >= 0; i--) {
+            toReturn.add(prev.get(i));
+        }
+        return toReturn;
     }
 
     /**
@@ -42,12 +59,12 @@ public class Main {
      * @param key The number to be placed
      * @return The leftmost eligible position for the key specified
      */
-    private static int binarySearch(int key) {
+    private int binarySearch(E key) throws Exception {
         int lft = 0, rit = top.size() + 1;
         int ans = 0;
         while (lft <= rit) {
             int mid = (lft + rit) / 2;
-            if (mid < top.size() && top.get(mid) < key) {
+            if (mid < top.size() && lessThan(top.get(mid), key)) {
                 lft = mid + 1;
             } else {
                 rit = mid - 1;
@@ -63,15 +80,15 @@ public class Main {
      * @param initial The initial bucket (bucket to merge)
      * @param merged  The output bucket (bucket storing the result of the merge)
      */
-    private static void mergeLists(ArrayList<ArrayList<Integer>> initial, ArrayList<ArrayList<Integer>> merged) {
+    private void mergeLists(ArrayList<ArrayList<E>> initial, ArrayList<ArrayList<E>> merged) throws Exception {
         merged.clear();
         for (int i = 0; i < initial.size() - 1; i += 2) {
             // Merge (i) and (i + 1)
-            merged.add(new ArrayList<Integer>());
+            merged.add(new ArrayList<E>());
             int p = initial.get(i).size() - 1, q = initial.get(i + 1).size() - 1;
             while (p >= 0 || q >= 0) {
-                int lesser = -1;
-                if ((p >= 0) && (q < 0 || initial.get(i).get(p) < initial.get(i + 1).get(q))) {
+                E lesser;
+                if ((p >= 0) && (q < 0 || lessThan(initial.get(i).get(p), initial.get(i + 1).get(q)))) {
                     lesser = initial.get(i).get(p);
                     p--;
                 } else {
@@ -82,7 +99,7 @@ public class Main {
             }
         }
         if (initial.size() % 2 != 0) {
-            merged.add(initial.get(initial.size() - 1));
+            merged.add(reverse((initial.get(initial.size() - 1))));
         }
     }
 
@@ -93,17 +110,16 @@ public class Main {
      * @param initial The initial buckets (buckets to merge)
      * @param merged  The output buckets (buckets storing the result of the merge)
      */
-    private static void mergeListsInReverse(ArrayList<ArrayList<Integer>> initial,
-            ArrayList<ArrayList<Integer>> merged) {
+    private void mergeListsInReverse(ArrayList<ArrayList<E>> initial, ArrayList<ArrayList<E>> merged) throws Exception {
         merged.clear();
         for (int i = 0; i < initial.size() - 1; i += 2) {
             // Merge (i) and (i + 1)
-            merged.add(new ArrayList<Integer>());
+            merged.add(new ArrayList<E>());
             int size1 = initial.get(i).size(), size2 = initial.get(i + 1).size();
             int p = 0, q = 0;
             while (p < size1 || q < size2) {
-                int lesser = -1;
-                if ((p < size1) && (q >= size2 || initial.get(i).get(p) < initial.get(i + 1).get(q))) {
+                E lesser;
+                if ((p < size1) && (q >= size2 || lessThan(initial.get(i).get(p), initial.get(i + 1).get(q)))) {
                     lesser = initial.get(i).get(p);
                     p++;
                 } else {
@@ -123,21 +139,21 @@ public class Main {
      * 
      * @param array The int array to be sorted
      */
-    public static void patienceSort(int array[]) {
-        top = new ArrayList<Integer>();
-        buckets = new ArrayList<ArrayList<Integer>>();
-        buckets1 = new ArrayList<ArrayList<Integer>>();
+    public void patienceSort(E array[]) throws Exception {
+        top = new ArrayList<E>();
+        buckets = new ArrayList<ArrayList<E>>();
+        buckets1 = new ArrayList<ArrayList<E>>();
 
         for (int i = 0; i < array.length; i++) {
             if (top.isEmpty()) {
                 top.add(array[i]);
-                buckets.add(new ArrayList<Integer>());
+                buckets.add(new ArrayList<E>());
                 buckets.get(0).add(array[i]);
             } else {
                 int pos = binarySearch(array[i]);
                 if (pos >= top.size()) {
                     top.add(array[i]);
-                    buckets.add(new ArrayList<Integer>());
+                    buckets.add(new ArrayList<E>());
                     buckets.get(buckets.size() - 1).add(array[i]);
                 } else {
                     top.set(pos, array[i]);
@@ -171,14 +187,5 @@ public class Main {
         for (int i = 0; i < array.length; i++) {
             array[i] = getCurrentList(toUse).get(0).get(i);
         }
-    }
-
-    /**
-     * This main method is a driver method that tests the patience sort algorithm
-     */
-    public static void main(String[] args) {
-        int a[] = { 10, 5, 8, 3, 9, 4, 12, 11, 3, -10, 20, 4, 7, 23, 0, -2, 4, 55, 1000, 730, 19, 18, 19, 29, 10 };
-        patienceSort(a);
-        System.out.println(Arrays.toString(a));
     }
 }
