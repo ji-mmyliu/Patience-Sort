@@ -7,9 +7,13 @@
  */
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
+/**
+ * This class is used to sort an array using the Patience Sort algorithm
+ * 
+ * @param E The Object type that the array to sort is going to be in
+ * @author Jimmy Liu
+ */
 public class PatienceSort<E> {
     /**
      * This 2D arraylist contains arraylists of arraylists which store the patience
@@ -36,14 +40,31 @@ public class PatienceSort<E> {
             return buckets1;
     }
 
-    private boolean lessThan(E a, E b) throws Exception {
+    /**
+     * This method is used to compare two parametized objects a and b
+     * 
+     * @param a One item to compare
+     * @param b Another item to compare
+     * @return True if item a is "less than" item b according to the implemeted
+     *         Comparable<E> interface
+     * @throws ClassCastException If the object type E does not implement the
+     *                            Comparable<E> interface
+     */
+    private boolean lessThan(E a, E b) throws ClassCastException {
         if (!(a instanceof Comparable<?>)) {
-            throw new Exception("Type specified does not implement the Comparable<E> interface");
+            throw new ClassCastException(
+                    "Type specified does not implement the Comparable<" + a.getClass().getName() + "> interface");
         }
         Comparable<E> c = (Comparable<E>) a;
         return c.compareTo(b) < 0;
     }
 
+    /**
+     * This method reverses an arraylist and returns the result
+     * 
+     * @param prev The original arraylist
+     * @return The arraylist after it has been reversed
+     */
     private ArrayList<E> reverse(ArrayList<E> prev) {
         ArrayList<E> toReturn = new ArrayList<E>();
         for (int i = prev.size() - 1; i >= 0; i--) {
@@ -137,7 +158,7 @@ public class PatienceSort<E> {
     /**
      * This method sorts an Integer array using the Patience Sort algorithm
      * 
-     * @param array The int array to be sorted
+     * @param array The array to be sorted
      */
     public void patienceSort(E array[]) throws Exception {
         top = new ArrayList<E>();

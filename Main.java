@@ -1,16 +1,21 @@
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        PatienceSort<Person> p = new PatienceSort();
-        Person a[] = { new Person("Abbey", 3), new Person("Bobby", 5), new Person("Dewey", 10),
-                new Person("Cathy", 6) };
+        PatienceSort<Person> p = new PatienceSort<Person>();
+        Scanner s = new Scanner(System.in);
+        int n = s.nextInt();
+        Person a[] = new Person[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = new Person(s.next(), s.nextInt());
+        }
 
         p.patienceSort(a);
         System.out.println(Arrays.toString(a));
     }
 
-    static class Person implements Comparable<Person> {
+    static class Person {
         String name;
         int age;
 
