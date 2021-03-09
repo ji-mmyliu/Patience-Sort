@@ -7,7 +7,6 @@
  */
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This class is used to sort an array using the Patience Sort algorithm
@@ -22,24 +21,8 @@ public class PatienceSort<E> {
      */
     private ArrayList<ArrayList<E>> buckets;
 
-    /** This 2D arraylist contains a merged arraylist */
-    private ArrayList<ArrayList<E>> buckets1;
-
     /** This arraylist contains the top element of each bucket */
     private ArrayList<E> top;
-
-    /**
-     * This method gets the current merged arraylist
-     * 
-     * @param status The merging state of the program
-     * @return The current merged arraylist
-     */
-    private ArrayList<ArrayList<E>> getCurrentList(boolean status) {
-        if (!status)
-            return buckets;
-        else
-            return buckets1;
-    }
 
     /**
      * This method is used to compare two parametized objects a and b
@@ -136,7 +119,6 @@ public class PatienceSort<E> {
     public void patienceSort(E array[]) throws Exception {
         top = new ArrayList<E>();
         buckets = new ArrayList<ArrayList<E>>();
-        buckets1 = new ArrayList<ArrayList<E>>();
 
         for (int i = 0; i < array.length; i++) {
             if (top.isEmpty()) {
@@ -180,7 +162,7 @@ public class PatienceSort<E> {
             }
         }
 
-        // Set values;
+        // Set values back into original array to sort it
         for(int i=0; i<array.length; i++){
             array[i] = buckets.get(0).get(i);
         }
