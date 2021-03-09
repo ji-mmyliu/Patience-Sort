@@ -7,6 +7,7 @@
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This class is used to sort an array using the Patience Sort algorithm
@@ -96,63 +97,35 @@ public class PatienceSort<E> {
     }
 
     /**
-     * This method merges every two buckets into a bucket in the merged pile
+     * This helper method merges two array lists together and sets the merged array
+     * in the correct index for the next merge
      * 
-     * @param initial The initial bucket (bucket to merge)
-     * @param merged  The output bucket (bucket storing the result of the merge)
+     * @param buckets The arraylist of arraylist of buckets
+     * @param idx The left index at which to merge with
      */
-    private void mergeLists(ArrayList<ArrayList<E>> initial, ArrayList<ArrayList<E>> merged) throws Exception {
-        merged.clear();
-        for (int i = 0; i < initial.size() - 1; i += 2) {
-            // Merge (i) and (i + 1)
-            merged.add(new ArrayList<E>());
-            int p = initial.get(i).size() - 1, q = initial.get(i + 1).size() - 1;
-            while (p >= 0 || q >= 0) {
-                E lesser;
-                if ((p >= 0) && (q < 0 || lessThan(initial.get(i).get(p), initial.get(i + 1).get(q)))) {
-                    lesser = initial.get(i).get(p);
-                    p--;
-                } else {
-                    lesser = initial.get(i + 1).get(q);
-                    q--;
-                }
-                merged.get(merged.size() - 1).add(lesser);
-            }
-        }
-        if (initial.size() % 2 != 0) {
-            merged.add(reverse((initial.get(initial.size() - 1))));
-        }
-    }
+    private void merge(ArrayList<ArrayList<E>> buckets, int idx) {
+        ArrayList<E> tmp = new ArrayList<E>();
+        int j=0;
 
-    /**
-     * This method merges every two buckets into a bucket in the merged pile but
-     * assumes the elements are sorted in reverse order
-     * 
-     * @param initial The initial buckets (buckets to merge)
-     * @param merged  The output buckets (buckets storing the result of the merge)
-     */
-    private void mergeListsInReverse(ArrayList<ArrayList<E>> initial, ArrayList<ArrayList<E>> merged) throws Exception {
-        merged.clear();
-        for (int i = 0; i < initial.size() - 1; i += 2) {
-            // Merge (i) and (i + 1)
-            merged.add(new ArrayList<E>());
-            int size1 = initial.get(i).size(), size2 = initial.get(i + 1).size();
-            int p = 0, q = 0;
-            while (p < size1 || q < size2) {
-                E lesser;
-                if ((p < size1) && (q >= size2 || lessThan(initial.get(i).get(p), initial.get(i + 1).get(q)))) {
-                    lesser = initial.get(i).get(p);
-                    p++;
-                } else {
-                    lesser = initial.get(i + 1).get(q);
-                    q++;
-                }
-                merged.get(merged.size() - 1).add(lesser);
+        // Merge both lists
+        for(E val: buckets.get(idx)) {
+            while(j<buckets.get(idx+1).size()&&lessThan(buckets.get(idx+1).get(j),val)){
+                tmp.add(buckets.get(idx+1).get(j++));
             }
+            tmp.add(val);
         }
-        if (initial.size() % 2 != 0) {
-            merged.add(initial.get(initial.size() - 1));
+
+        // Merge any that are left in this list
+        while(j<buckets.get(idx+1).size()){
+            tmp.add(buckets.get(idx+1).get(j++));
         }
+
+        // Empty both buckets
+        buckets.set(idx, new ArrayList<E>());
+        buckets.set(idx+1, new ArrayList<E>());
+
+        // Set new bucket
+        buckets.set(idx/2, tmp);
     }
 
     /**
@@ -183,30 +156,33 @@ public class PatienceSort<E> {
             }
         }
 
-        boolean toUse = false; // false - from bucket to bucket1; true - from bucket1 to bucket
-        boolean firstMerge = true;
-
-        if (getCurrentList(toUse).size() == 1) {
-            for (int i = 0; i < array.length; i++) {
-                array[i] = getCurrentList(toUse).get(0).get(array.length - i - 1);
-            }
-            return;
+        // Reverse buckets for sorting
+        for(int i=0; i<buckets.size(); i++){
+            buckets.set(i,reverse(buckets.get(i)));
         }
 
-        while (getCurrentList(toUse).size() > 1) {
-            if (firstMerge) {
-                mergeLists(buckets, buckets1);
-                firstMerge = false;
-            } else if (!toUse) {
-                mergeListsInReverse(buckets, buckets1);
-            } else {
-                mergeListsInReverse(buckets1, buckets);
+        // Perform merge sort
+        while(buckets.size() > 1) {
+            // Every even bucket get's merged with it's odd counterpart
+            for(int i=0; i+1<buckets.size(); i+=2){
+                merge(buckets, i);
             }
-            toUse = !toUse;
+
+            // Move the leftover bucket to the correct index
+            if(buckets.size()%2==1){
+                buckets.set(buckets.size()/2, buckets.get(buckets.size()-1));
+                buckets.remove(buckets.size()-1);
+            }
+
+            // Remove all empty arraylists from the end
+            while(buckets.get(buckets.size()-1).size() == 0) {
+                buckets.remove(buckets.size()-1);
+            }
         }
 
-        for (int i = 0; i < array.length; i++) {
-            array[i] = getCurrentList(toUse).get(0).get(i);
+        // Set values;
+        for(int i=0; i<array.length; i++){
+            array[i] = buckets.get(0).get(i);
         }
     }
 }
