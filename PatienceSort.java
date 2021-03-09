@@ -7,7 +7,6 @@
  */
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This class is used to sort an array using the Patience Sort algorithm
@@ -22,24 +21,8 @@ public class PatienceSort<E> {
      */
     private ArrayList<ArrayList<E>> buckets;
 
-    /** This 2D arraylist contains a merged arraylist */
-    private ArrayList<ArrayList<E>> buckets1;
-
     /** This arraylist contains the top element of each bucket */
     private ArrayList<E> top;
-
-    /**
-     * This method gets the current merged arraylist
-     * 
-     * @param status The merging state of the program
-     * @return The current merged arraylist
-     */
-    private ArrayList<ArrayList<E>> getCurrentList(boolean status) {
-        if (!status)
-            return buckets;
-        else
-            return buckets1;
-    }
 
     /**
      * This method is used to compare two parametized objects a and b
@@ -101,31 +84,31 @@ public class PatienceSort<E> {
      * in the correct index for the next merge
      * 
      * @param buckets The arraylist of arraylist of buckets
-     * @param idx The left index at which to merge with
+     * @param idx     The left index at which to merge with
      */
     private void merge(ArrayList<ArrayList<E>> buckets, int idx) {
         ArrayList<E> tmp = new ArrayList<E>();
-        int j=0;
+        int j = 0;
 
         // Merge both lists
-        for(E val: buckets.get(idx)) {
-            while(j<buckets.get(idx+1).size()&&lessThan(buckets.get(idx+1).get(j),val)){
-                tmp.add(buckets.get(idx+1).get(j++));
+        for (E val : buckets.get(idx)) {
+            while (j < buckets.get(idx + 1).size() && lessThan(buckets.get(idx + 1).get(j), val)) {
+                tmp.add(buckets.get(idx + 1).get(j++));
             }
             tmp.add(val);
         }
 
         // Merge any that are left in this list
-        while(j<buckets.get(idx+1).size()){
-            tmp.add(buckets.get(idx+1).get(j++));
+        while (j < buckets.get(idx + 1).size()) {
+            tmp.add(buckets.get(idx + 1).get(j++));
         }
 
         // Empty both buckets
         buckets.set(idx, new ArrayList<E>());
-        buckets.set(idx+1, new ArrayList<E>());
+        buckets.set(idx + 1, new ArrayList<E>());
 
         // Set new bucket
-        buckets.set(idx/2, tmp);
+        buckets.set(idx / 2, tmp);
     }
 
     /**
@@ -136,7 +119,6 @@ public class PatienceSort<E> {
     public void patienceSort(E array[]) throws Exception {
         top = new ArrayList<E>();
         buckets = new ArrayList<ArrayList<E>>();
-        buckets1 = new ArrayList<ArrayList<E>>();
 
         for (int i = 0; i < array.length; i++) {
             if (top.isEmpty()) {
@@ -157,32 +139,34 @@ public class PatienceSort<E> {
         }
 
         // Reverse buckets for sorting
-        for(int i=0; i<buckets.size(); i++){
-            buckets.set(i,reverse(buckets.get(i)));
+        for (int i = 0; i < buckets.size(); i++) {
+            buckets.set(i, reverse(buckets.get(i)));
         }
 
         // Perform merge sort
-        while(buckets.size() > 1) {
+        while (buckets.size() > 1) {
             // Every even bucket get's merged with it's odd counterpart
-            for(int i=0; i+1<buckets.size(); i+=2){
+            for (int i = 0; i + 1 < buckets.size(); i += 2) {
                 merge(buckets, i);
             }
 
             // Move the leftover bucket to the correct index
-            if(buckets.size()%2==1){
-                buckets.set(buckets.size()/2, buckets.get(buckets.size()-1));
-                buckets.remove(buckets.size()-1);
+            if (buckets.size() % 2 == 1) {
+                buckets.set(buckets.size() / 2, buckets.get(buckets.size() - 1));
+                buckets.remove(buckets.size() - 1);
             }
 
             // Remove all empty arraylists from the end
-            while(buckets.get(buckets.size()-1).size() == 0) {
-                buckets.remove(buckets.size()-1);
+            while (buckets.get(buckets.size() - 1).size() == 0) {
+                buckets.remove(buckets.size() - 1);
             }
         }
 
-        // Set values;
-        for(int i=0; i<array.length; i++){
+        // Set values back into original array to sort it
+        for (int i = 0; i < array.length; i++) {
             array[i] = buckets.get(0).get(i);
         }
+
+        // Finished sorting!
     }
 }
