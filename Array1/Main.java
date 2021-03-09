@@ -3,15 +3,19 @@ import java.io.*;
 
 public class Main {
 
-    public static String names[] = new String[35];
-    public static int marks[] = new int[35];
+    public static ArrayList<String> names;
+    public static ArrayList<Integer> marks;
     public static void main(String[] args) throws IOException{
+        names = new ArrayList<String>();
+        marks = new ArrayList<Integer>();
         
     }
 
     public static void parseFile(String fileName) throws IOException{
         BufferedReader br = new BufferedReader(new BufferedReader(new FileReader(fileName)));
-        for(int i=0; i<35; i++) {
+        while(true) {
+            String line = br.readLine()
+            if(line == null)break;
             names[i]=br.readLine();
             marks[i]=Integer.parseInt(br.readLine());
         }
