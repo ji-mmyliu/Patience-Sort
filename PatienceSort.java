@@ -83,12 +83,12 @@ public class PatienceSort<E> {
     private int binarySearch(E key) throws Exception {
         int lft = 0, rit = top.size() + 1;
         int ans = 0;
-        while (lft <= rit) {
+        while (lft < rit) {
             int mid = (lft + rit) / 2;
             if (mid < top.size() && lessThan(top.get(mid), key)) {
                 lft = mid + 1;
             } else {
-                rit = mid - 1;
+                rit = mid;
                 ans = mid;
             }
         }
