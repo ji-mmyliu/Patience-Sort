@@ -33,7 +33,7 @@ public class Main {
             if(line == null) break;
             Matcher matcher = pattern.matcher(line);
             if(matcher.find()){
-                String country = matcher.group(1).strip();
+                String country = matcher.group(1).trim();
                 int countryIdx = getCountryNameIdx(country);
                 countryName.add(country.substring(0, countryIdx));
                 countryCaptial.add(country.substring(countryIdx));
