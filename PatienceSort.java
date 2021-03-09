@@ -112,9 +112,10 @@ public class PatienceSort<E> {
     }
 
     /**
-     * This method sorts an Integer array using the Patience Sort algorithm
+     * This method sorts an array using the Patience Sort algorithm
      * 
      * @param array The array to be sorted
+     * @throws Exception
      */
     public void patienceSort(E array[]) throws Exception {
         top = new ArrayList<E>();

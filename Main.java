@@ -10,12 +10,12 @@ public class Main {
         for (int i = 0; i < n; i++) {
             a[i] = new Person(s.next(), s.nextInt());
         }
-        System.out.println("REEEE");
+
         p.patienceSort(a);
         System.out.println(Arrays.toString(a));
     }
 
-    static class Person implements Comparable<Person>{
+    static class Person implements Comparable<Person> {
         String name;
         int age;
 
