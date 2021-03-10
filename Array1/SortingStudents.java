@@ -1,3 +1,9 @@
+/**
+ * Names: Di Hu, Jimmy Liu, Josh Liu
+ * Date: March 11, 2021
+ * Teacher: Ms. Krasteva
+ * Description: This class sorts the students by name and by mark using insertion sort.
+ */
 import java.util.*;
 import java.io.*;
 

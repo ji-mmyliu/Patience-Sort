@@ -1,12 +1,12 @@
 
 /**
- * Names: Josh Liu, Di Hu, Jimmy Liu
+ * Names: Di Hu, Jimmy Liu, Josh Liu
  * Date: March 11, 2021
  * Teacher: Ms. Krasteva
- * Description: This class sorts the countries using insertion sort
+ * Description: This class sorts the countries by name and by population using insertion sort.
  * 
  * Resources:
- *https://docs.oracle.com/javase/8/docs/api/index.html?java/util/regex/package-summary.html
+ * https://docs.oracle.com/javase/8/docs/api/index.html?java/util/regex/package-summary.html
  */
 import java.util.*;
 import java.util.regex.*;
