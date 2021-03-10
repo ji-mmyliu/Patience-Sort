@@ -3,10 +3,19 @@ import java.util.regex.*;
 import java.io.*;
 
 public class Main {
+    /** An arraylist of the names of the countries */
     public static ArrayList<String> countryName;
+
+    /** An arraylist of the capital cities of the countries */
     public static ArrayList<String> countryCaptial;
+
+    /** An arraylist of the areas of the countries */
     public static ArrayList<Double> area;
+
+    /** An arraylist of the countries' populations */
     public static ArrayList<Integer> population;
+
+    /** An array of all countries with two words */
     public static String doubleWordCountry[] = {"Burkina Faso","Cape Verde","Costa Rica","Czech Republic","Côte d'Ivoire","Dominican Republic","East Timor","El Salvador","Equatorial Guinea","Korea, North","Korea, South","Marshall Islands","Myanmar (Burma)","New Zealand","San Marino","Saudi Arabia","Sierra Leone","Solomon Islands","South Africa","Sri Lanka","St. Lucia","United Kingdom","United States","Vatican City","Western Sahara","Antigua and Barbuda","Bosnia and Herzegovina","Central African Republic","Congo, Republic of","Papua New Guinea","Trinidad and Tobago","United Arab Emirates","St. Kitts and Nevis","São Tomé and Príncipe","Congo, Democratic Republic of the","St. Vincent and the Grenadines"};
 
     public static void main(String[] args) throws IOException{
@@ -17,6 +26,11 @@ public class Main {
         parseFile("Countries-Populations.txt");
     }   
     
+    /**
+     * This method gets the country's index
+     * @param country The name of the country
+     * @return The index of the country
+     */
     public static int getCountryNameIdx(String country){
         for(String countryName: doubleWordCountry) {
             if(country.startsWith(countryName)) return countryName.length();
@@ -24,6 +38,11 @@ public class Main {
         return country.indexOf(' ');
     }
 
+    /**
+     * This method parses a text file into array data
+     * @param fileName The name of the text file to parse
+     * @throws IOException If the buffered reader throws an exception
+     */
     public static void parseFile(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new BufferedReader(new FileReader(fileName)));
         Pattern pattern = Pattern.compile("([\\D ]+) ([\\d+,.]+) ([\\d+,]+)");
