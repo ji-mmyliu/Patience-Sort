@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class Main {
+public class SortingStudentsDriver {
     /** This array list contains the list of the student names */
     public static ArrayList<String> names;
 

@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.regex.*;
 import java.io.*;
 
-public class Main {
+public class SortingCountriesDriver {
     /** An arraylist of the names of the countries */
     public static ArrayList<String> countryName;
 
