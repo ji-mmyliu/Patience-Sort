@@ -9,7 +9,5 @@ public class SortingDriver {
         p.patienceSort(array);
 
         System.out.println(Arrays.toString(array));
-        ArrayList<Integer> a = new ArrayList<Integer>();
-        a.toString();
     }
 }
